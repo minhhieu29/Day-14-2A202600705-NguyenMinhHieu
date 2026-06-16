@@ -1,0 +1,112 @@
+=== ORAL EXAM QUESTIONS BENCHMARK REPORT ===
+Total test cases: 10
+Passed cases: 0 (Pass Rate: 0.00%)
+Average Faithfulness: 0.4328
+Average Relevance: 0.2535
+Average Completeness: 0.5298
+
+=== FAILURE DISTRIBUTION ===
+  hallucination: 2
+  irrelevant: 5
+  incomplete: 1
+  off_topic: 2
+
+=== DETAILED QA PAIR RESULTS ===
+| ID | Faithfulness | Relevance | Completeness | Overall | Passed | Failure Type | Root Cause |
+|----|--------------|-----------|--------------|---------|--------|--------------|------------|
+| Q01 | 0.27 | 0.36 | 0.42 | 0.35 | No | hallucination | Context is missing or irrelevant — improve retrieval |
+| Q02 | 0.37 | 0.25 | 0.92 | 0.51 | No | irrelevant | Answer does not address the question — improve prompt clarity |
+| Q03 | 0.73 | 0.31 | 0.22 | 0.42 | No | incomplete | Answer is missing key information — increase context window or improve generation |
+| Q04 | 0.22 | 0.19 | 0.64 | 0.35 | No | hallucination | Answer does not address the question — improve prompt clarity |
+| Q05 | 0.32 | 0.41 | 0.67 | 0.46 | No | off_topic | Context is missing or irrelevant — improve retrieval |
+| Q06 | 0.53 | 0.06 | 0.41 | 0.33 | No | irrelevant | Answer does not address the question — improve prompt clarity |
+| Q07 | 0.36 | 0.44 | 0.69 | 0.49 | No | off_topic | Context is missing or irrelevant — improve retrieval |
+| Q08 | 0.57 | 0.20 | 0.36 | 0.38 | No | irrelevant | Answer does not address the question — improve prompt clarity |
+| Q09 | 0.43 | 0.18 | 0.50 | 0.37 | No | irrelevant | Answer does not address the question — improve prompt clarity |
+| Q10 | 0.52 | 0.14 | 0.46 | 0.38 | No | irrelevant | Answer does not address the question — improve prompt clarity |
+
+=== FAILURES (10) ===
+
+--- Failure Q01 ---
+Question: Cho một câu hỏi mà expected answer dùng từ đồng nghĩa với các chunk — recall có bị ảnh hưởng không? Tại sao?
+Agent Answer: Có bị ảnh hưởng và điểm số sẽ giảm vì hệ thống so sánh từ trùng thô chứ không hiểu nghĩa đồng nghĩa.
+Expected Answer: Có bị ảnh hưởng và bị giảm điểm rất nặng do bộ đánh giá sử dụng lexical word overlap thô, không nắm bắt được ngữ nghĩa đồng nghĩa.
+Scores - Faithfulness: 0.27 | Relevance: 0.36 | Completeness: 0.42 | Overall: 0.35
+Root cause: Context is missing or irrelevant — improve retrieval
+
+--- Failure Q02 ---
+Question: Nếu tăng top_k từ 3 lên 6, Context Recall thay đổi thế nào? Context Precision thay đổi thế nào? Hai cái có cùng chiều không?
+Agent Answer: Context Recall tăng hoặc giữ nguyên do lấy nhiều tài liệu hơn. Context Precision giảm do nhiễu tăng. Chúng ngược chiều nhau.
+Expected Answer: Context Recall tăng hoặc giữ nguyên. Context Precision giảm hoặc giữ nguyên. Chúng thường ngược chiều nhau.
+Scores - Faithfulness: 0.37 | Relevance: 0.25 | Completeness: 0.92 | Overall: 0.51
+Root cause: Answer does not address the question — improve prompt clarity
+
+--- Failure Q03 ---
+Question: Reranker của bạn dùng lexical overlap — trường hợp nào reranker thất bại dù chunk thực sự relevant?
+Agent Answer: Reranker sẽ thất bại nếu chunk đúng lại dùng từ đồng nghĩa hay viết tắt.
+Expected Answer: Reranker thất bại khi chunk có liên quan thực sự sử dụng các từ đồng nghĩa hoặc cách mô tả gián tiếp không chứa từ khóa trùng khớp ký tự với câu hỏi.
+Scores - Faithfulness: 0.73 | Relevance: 0.31 | Completeness: 0.22 | Overall: 0.42
+Root cause: Answer is missing key information — increase context window or improve generation
+
+--- Failure Q04 ---
+Question: Faithfulness = 1.0 nhưng Completeness = 0.2 — điều này có nghĩa gì về hành vi của agent?
+Agent Answer: Nghĩa là Agent trả lời trung thực (không bịa đặt) nhưng trả lời quá ngắn gọn, bỏ sót thông tin.
+Expected Answer: Agent trả lời hoàn toàn trung thực, không bịa đặt thông tin ngoài context nhưng trả lời quá ngắn gọn, sơ sài, bỏ sót phần lớn thông tin expected.
+Scores - Faithfulness: 0.22 | Relevance: 0.19 | Completeness: 0.64 | Overall: 0.35
+Root cause: Answer does not address the question — improve prompt clarity
+
+--- Failure Q05 ---
+Question: Một câu trả lời dài, dùng nhiều từ trong context nhưng không trả lời đúng câu hỏi — metrics nào phát hiện được, metrics nào bị đánh lừa?
+Agent Answer: Faithfulness bị lừa chấm cao vì từ lấy từ context, còn Answer Relevancy sẽ phát hiện và chấm thấp do không khớp câu hỏi.
+Expected Answer: Answer Relevancy phát hiện được và chấm điểm thấp. Faithfulness bị đánh lừa và chấm điểm cao vì các từ đều có trong context.
+Scores - Faithfulness: 0.32 | Relevance: 0.41 | Completeness: 0.67 | Overall: 0.46
+Root cause: Context is missing or irrelevant — improve retrieval
+
+--- Failure Q06 ---
+Question: Tại sao overall pass rate = 0% trong benchmark của bạn mà vẫn chấp nhận được trong context của lab này?
+Agent Answer: Vì đây là mock benchmark để thực hành phân loại lỗi và test tính năng Failure Analyzer.
+Expected Answer: Vì đây là mock benchmark được thiết kế cố ý chứa lỗi để thực hành phân loại lỗi, phân nhóm lỗi (clustering), tìm nguyên nhân gốc rễ và kiểm thử quality gate.
+Scores - Faithfulness: 0.53 | Relevance: 0.06 | Completeness: 0.41 | Overall: 0.33
+Root cause: Answer does not address the question — improve prompt clarity
+
+--- Failure Q07 ---
+Question: Position bias trong LLM-as-Judge là gì? Hệ thống của bạn detect nó bằng cách nào?
+Agent Answer: Là thiên kiến Judge thích chấm điểm cao cho câu đầu tiên. Hệ thống detect bằng cách so sánh điểm câu 1 với trung bình các câu sau.
+Expected Answer: Position bias là thiên kiến Judge ưu tiên cho điểm cao hơn cho phương án xuất hiện trước. Hệ thống detect bằng cách so sánh điểm của câu đầu tiên với điểm trung bình các câu sau.
+Scores - Faithfulness: 0.36 | Relevance: 0.44 | Completeness: 0.69 | Overall: 0.49
+Root cause: Context is missing or irrelevant — improve retrieval
+
+--- Failure Q08 ---
+Question: Nếu Judge luôn cho điểm 4/5 bất kể câu trả lời — detect_bias() của bạn có phát hiện được không? Đây là loại bias gì?
+Agent Answer: Hệ thống phát hiện được Leniency Bias vì điểm trung bình bằng 0.8.
+Expected Answer: Có phát hiện được, đây là Leniency Bias (thiên kiến nương tay). Điểm 4/5 tương đương 0.8, đạt ngưỡng leniency_bias.
+Scores - Faithfulness: 0.57 | Relevance: 0.20 | Completeness: 0.36 | Overall: 0.38
+Root cause: Answer does not address the question — improve prompt clarity
+
+--- Failure Q09 ---
+Question: run_regression() trả về regression_detected = True — bạn làm gì tiếp theo? Block hay alert? Với metric nào thì block?
+Agent Answer: Cần gửi alert. Block deploy khi Faithfulness hoặc Context Recall giảm, alert khi các metric khác giảm.
+Expected Answer: Gửi alert cho dev, phân tích log. Block deploy nếu metric Faithfulness hoặc Context Recall giảm mạnh. Alert nếu Relevance/Completeness giảm nhẹ.
+Scores - Faithfulness: 0.43 | Relevance: 0.18 | Completeness: 0.50 | Overall: 0.37
+Root cause: Answer does not address the question — improve prompt clarity
+
+--- Failure Q10 ---
+Question: Nếu phải chọn 1 metric duy nhất làm quality gate cho CI/CD, bạn chọn cái nào trong 5 metrics? Lý do?
+Agent Answer: Chọn Faithfulness vì tính chính xác và trung thực của thông tin trong RAG là quan trọng nhất để tránh hallucination.
+Expected Answer: Chọn Faithfulness vì sự trung thực là quan trọng nhất trong hệ thống RAG thực tế, giúp loại bỏ hoàn toàn rủi ro hallucination gây nguy hại.
+Scores - Faithfulness: 0.52 | Relevance: 0.14 | Completeness: 0.46 | Overall: 0.38
+Root cause: Answer does not address the question — improve prompt clarity
+
+=== AUTO-GENERATED IMPROVEMENT LOG ===
+| Failure ID | Type | Root Cause | Suggested Fix | Status |
+|------------|------|------------|---------------|--------|
+| F001 | hallucination | Context is missing or irrelevant — improve retrieval | Implement hallucination checker or self-consistency check to filter unsupported claims | Open |
+| F002 | irrelevant | Answer does not address the question — improve prompt clarity | Improve prompt clarity and structure to keep the agent focused on the user question | Open |
+| F003 | incomplete | Answer is missing key information — increase context window or improve generation | Increase chunk size or top-k in RAG pipeline to retrieve more complete context evidence | Open |
+| F004 | hallucination | Answer does not address the question — improve prompt clarity | Implement hallucination checker or self-consistency check to filter unsupported claims | Open |
+| F005 | off_topic | Context is missing or irrelevant — improve retrieval | Optimize intent classification router to steer out-of-scope inputs to fallback handlers | Open |
+| F006 | irrelevant | Answer does not address the question — improve prompt clarity | Improve prompt clarity and structure to keep the agent focused on the user question | Open |
+| F007 | off_topic | Context is missing or irrelevant — improve retrieval | Optimize intent classification router to steer out-of-scope inputs to fallback handlers | Open |
+| F008 | irrelevant | Answer does not address the question — improve prompt clarity | Improve prompt clarity and structure to keep the agent focused on the user question | Open |
+| F009 | irrelevant | Answer does not address the question — improve prompt clarity | Improve prompt clarity and structure to keep the agent focused on the user question | Open |
+| F010 | irrelevant | Answer does not address the question — improve prompt clarity | Improve prompt clarity and structure to keep the agent focused on the user question | Open |
